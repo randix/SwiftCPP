@@ -1,0 +1,73 @@
+https://stackoverflow.com/questions/1061005/calling-objective-c-method-from-c-member-function
+
+You can mix C++ with Objective-C if you do it carefully. There are
+a few caveats but generally speaking they can be mixed. If you want
+to keep them separate, you can set up a standard C wrapper function
+that gives the Objective-C object a usable C-style interface from
+non-Objective-C code (pick better names for your files, I have
+picked these names for verbosity):
+
+-------------------------------
+MyObject-C-Interface.h
+-------------------------------
+
+#ifndef __MYOBJECT_C_INTERFACE_H__
+#define __MYOBJECT_C_INTERFACE_H__
+
+// This is the C "trampoline" function that will be used
+// to invoke a specific Objective-C method FROM C++
+int MyObjectDoSomethingWith (void *myObjectInstance, void *parameter);
+#endif
+
+-------------------------------
+MyObject.h
+-------------------------------
+
+#import "MyObject-C-Interface.h"
+
+// An Objective-C class that needs to be accessed from C++
+@interface MyObject : NSObject
+{
+    int someVar;
+}
+
+// The Objective-C member function you want to call from C++
+- (int) doSomethingWith:(void *) aParameter;
+@end
+
+-------------------------------
+MyObject.mm
+-------------------------------
+
+#import "MyObject.h"
+
+@implementation MyObject
+
+// C "trampoline" function to invoke Objective-C method
+int MyObjectDoSomethingWith (void *self, void *aParameter)
+{
+    // Call the Objective-C method using Objective-C syntax
+    return [(id) self doSomethingWith:aParameter];
+}
+
+- (int) doSomethingWith:(void *) aParameter
+{
+    // The Objective-C function you wanted to call from C++.
+    // do work here..
+    return 21 ; // half of 42
+}
+@end
+
+-------------------------------
+MyCPPClass.cpp
+-------------------------------
+
+#include "MyCPPClass.h"
+#include "MyObject-C-Interface.h"
+
+int MyCPPClass::someMethod (void *objectiveCObject, void *aParameter)
+{
+    // To invoke an Objective-C method from C++, use
+    // the C trampoline function
+    return MyObjectDoSomethingWith (objectiveCObject, aParameter);
+}
