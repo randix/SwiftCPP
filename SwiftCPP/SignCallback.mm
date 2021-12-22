@@ -13,12 +13,14 @@
 // this is the include from the library (C2PA)
 #include "signer.hpp"
 
-// resolve the linker object for the parameter "class"
+// resolve the linker object for the parameter class
 @implementation LensSignParameter
 @end
 
-
+// save the SignCallback Object "self" for the trampoline
 id signObj;
+
+
 // ObjC Object
 @implementation SignCallback
 
@@ -38,8 +40,7 @@ id signObj;
 // Swift -> ObjC(here) -> C++ class method
 -(void)sign:(LensSignParameter *)data
 {
-    printf("SignCallback.sign\n");
-    
+    printf("SignCallback.sign -- call the C++ libarary\n");
     Signer signer;
     signer.sign(3, SignCallbackCpp::signCallback);
 }
@@ -50,13 +51,6 @@ void signCallbackTrampoline(id self)
     [self  signCallback];
 }
 @end
-
-//-(void)
-//void CbObjcpp::sign(const std::vector<uint8_t> & data, std::vector<uint8_t> & sig, void (*fn)(std::vector<uint8_t> const &, std::vector<uint8_t> &))
-//{
-//    signPtr = fn;
-//    signCb(data, sig);
-//}
 
 void SignCallbackCpp::signCallback(const std::vector<uint8_t>& data, std::vector<uint8_t>& sig)
 {

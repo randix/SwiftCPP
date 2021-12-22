@@ -30,22 +30,14 @@ typedef void (^signCb)();
 
 @interface SignCallback : NSObject
 {
-    signCb swiftSignCallback;
-    //id signObj;
+    signCb swiftSignCallback;       // callback to Swift to get to the Secure Enclave
 }
--(void)setCallback:(signCb)swiftSignCallback;
--(void)signCallback;
--(void)sign:(LensSignParameter *)data;
+-(void)setCallback:(signCb)swiftSignCallback;   // called from Swift
+-(void)signCallback;                            // called ultimately from C++
 
-//-(void)signCallb:(LensSignParameter *)data;
+-(void)sign:(LensSignParameter *)data;          // called from Swift to call down to the "claims generator"
 
 @end
-
-//void setSignCallbackC(id cb);
-//
-//void signC(id cb, unsigned char * dataPtr, unsigned long dataLen, unsigned char *sigPtr, unsigned long sigLen);
-//void signCCallback(const unsigned char * dataPtr, unsigned long dataLen, unsigned char *sigPtr, unsigned long sigLen);
-// 
 
 NS_ASSUME_NONNULL_END
 

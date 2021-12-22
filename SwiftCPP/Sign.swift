@@ -12,17 +12,18 @@ class Sign {
     func testSign() {
         print(#function)
         
+        // set up the callbacks
         let signCallback = SignCallback()
         signCallback.setCallback(signWithSecureEnclave)
         
+        // test by calling the "claims generator"
         let data = Data([1])
         let sig = Data()
         let p = LensSignParameter()
         p.data = data
         p.sig = sig
-        
         signCallback.sign(p)
-//        print(p.sig[0] as Any)
+        print(p.sig[0] as Any)
     }
 }
 
