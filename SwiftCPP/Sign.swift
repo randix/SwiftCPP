@@ -21,7 +21,7 @@ class Sign {
     }
 }
 
-// Going down to C wants a global function in Swift 😳
+// Calling from C/ObjC wants a global function in Swift 😳
 func signWithSecureEnclave(_ data: Data) -> Data {
     print(#function, "call SecureEnclave here")
     print("data.count \(data.count)")
