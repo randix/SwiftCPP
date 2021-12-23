@@ -17,19 +17,17 @@ class Sign {
         signCallback.setCallback(signWithSecureEnclave)
         
         // test by calling the "claims generator"
-        let data = Data([1, 2, 3, 4])
-        let sig = Data([1,2, 3, 4])
-        let p = LensSignParameter()
-        p.data = data
-        p.sig = sig
-        signCallback.sign(p)
-        print("Swift final result", p.sig[0] as Any)
+        signCallback.sign()
     }
 }
 
 // Going down to C wants a global function in Swift 😳
-func signWithSecureEnclave(_ p: LensSignParameter) {
+func signWithSecureEnclave(_ data: Data) -> Data {
     print(#function, "call SecureEnclave here")
-   // p.sig = p.data
+    print("data.count \(data.count)")
+    for i in 0..<data.count {
+        print(data[i])
+    }
+    return data
 }
 

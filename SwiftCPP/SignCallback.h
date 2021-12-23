@@ -1,5 +1,5 @@
 //
-//  CbObjc.h
+//  SignCallback.h
 //  SwiftCPP
 //
 //  Created by Rand Dow on 12/17/21.
@@ -11,30 +11,30 @@
 #import <Foundation/Foundation.h>
 
 
-// C++ -> this trampoline -> ObjC
-void signCallbackTrampoline();
-
-
 NS_ASSUME_NONNULL_BEGIN
 
-// this is the parameter between ObjC and Swift (since ObjC doesn't allow "inout" paramters)
-@interface LensSignParameter: NSObject
-@property NSData * data;
-@property NSData * sig;
-@end
+// C++ -> this trampoline -> ObjC
+void signCallbackTrampoline(id, const uint8_t *, NSUInteger, uint8_t *, NSUInteger);
+
+typedef struct SignatureResult {
+    uint8_t *sig;
+    NSUInteger sigLen;
+} SigResult;
+
 
 // this is the signature of the Swift callback
-typedef void (^signCb)(LensSignParameter *);
+typedef NSData * _Nonnull (^SignCb)(NSData *);
 
 
 @interface SignCallback : NSObject
 {
-    signCb swiftSignCallback;       // callback to Swift to get to the Secure Enclave
+    SignCb swiftSignCallback;       // callback to Swift to get to the Secure Enclave
+    NSData * signature;
 }
--(void)setCallback:(signCb)swiftSignCallback;   // called from Swift
--(void)signCallback;                            // called ultimately from C++
+-(void)setCallback:(SignCb)swiftSignCallback;    // called from Swift
+-(SigResult)signCallback:(NSData *)data; // C++ -> trampoline -> signCallback
 
--(void)sign:(LensSignParameter *)data;          // called from Swift to call down to the "claims generator"
+-(void)sign;       // called from Swift to call down to the "claims generator"
 
 @end
 
