@@ -24,8 +24,7 @@ NS_ASSUME_NONNULL_BEGIN
 @end
 
 // this is the signature of the Swift callback
-//typedef void (^signCb)(LensSignParameter *);
-typedef void (^signCb)();
+typedef void (^signCb)(LensSignParameter *);
 
 
 @interface SignCallback : NSObject

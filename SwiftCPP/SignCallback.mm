@@ -31,7 +31,7 @@ id signObj;
     signObj = self;
 }
 
--(void)signCallback
+-(void)signCallback // this needs the parameters
 {
     printf("SignCallback.signCallback\n");
     self->swiftSignCallback();
@@ -45,7 +45,7 @@ id signObj;
     signer.sign(3, SignCallbackCpp::signCallback);
 }
 
-void signCallbackTrampoline(id self)
+void signCallbackTrampoline(id self)// this needs the parameters
 {
     printf("SignCallback.signCallbackTrampoline\n");
     [self  signCallback];
