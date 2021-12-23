@@ -79,11 +79,9 @@ void SignCallbackCpp::signCallback(const std::vector<uint8_t>& data, std::vector
     for (int i=0; i < sigLen; i++) {
         printf("%d\n", sigBytes[i]);
     }
-    // convert sig to vector
+    // copy bytes into vector
     sig.resize(sigLen);
-    for (int i = 0; i < sigLen; i++) {
-        sig[i] = sigBytes[i];
-    }
+    memcpy(&sig[0], sigBytes, sigLen);
     
     printf("%lu, back to library:\n", sig.size());
 }
