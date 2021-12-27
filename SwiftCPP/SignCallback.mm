@@ -26,6 +26,7 @@ id swiftCallbackSignObj;
     swiftCallbackSignObj = self;                        // save the object id
 }
 
+// ObjC: C++ -> C++ callback -> C++ trampoline -> here -> indirect SwiftCallback
 -(SigResult)signCallback:(NSData *)data;
 {
     printf("SignCallback.signCallback\n");
@@ -42,6 +43,7 @@ id swiftCallbackSignObj;
 {
     printf("SignCallback.sign -- call the C++ libarary\n");
     // claim signer: marshal and convert parameters to pass down
+    // TODO: probably need to marshal ObjC parameters to C/C++ paramters
     Signer signer;
     signer.sign(3, SignCallbackCpp::signCallback);
 }
